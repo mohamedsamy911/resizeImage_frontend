@@ -20,6 +20,9 @@ export const validationMessages: any = {
   role: {
     required: 'Insert a valid Role',
   },
+  mapRefrence: {
+    required: 'Please select a map refrence',
+  },
   size: {
     required: '',
   },
@@ -32,15 +35,16 @@ export const validationMessages: any = {
   url: {
     required: 'Insert a valid URL',
   },
-  username : {
-    required : 'Insert a valid Username'
+  username: {
+    required: 'Insert a valid Username',
   },
-  password : {
-    required : 'Insert a valid Password'
+  password: {
+    required: 'Insert a valid Password',
   },
-  stylename : {
-    required : 'Insert a valid style name'
-  }
+  stylename: {
+    required: 'Insert a valid style name',
+    stylenamevalidation: 'Style name already exists in geoserver',
+  },
 };
 
 export const formErrors: any = {
@@ -52,10 +56,10 @@ export const formErrors: any = {
   size: '',
   min: '',
   max: '',
+  mapRefrence: '',
   layername: '',
   url: '',
   username: '',
   password: '',
-  stylename : ''
-
+  stylename: '',
 };

@@ -19,360 +19,292 @@
 >
   <img class="showloading" src="../assets/images/giphy.gif" />
 </div>
-<form [formGroup]="geoserverLogin" class="needs-validation">
-  <div class="container-fluid w-50 py-3 border border-black rounded my-3">
-    <div class="row my-3">
-      <div
-        class="col d-flex justify-content-start flex-wrap form-group"
-        [ngClass]="{ 'invalid-feedback': formErrorsFn().url }"
-      >
-        <label for="url" class="form-label me-3"
-          >Geoserver URL<i class="text-danger">*</i></label
-        >
-        <input
-          type="text"
-          class="form-control form-control-sm"
-          id="url"
-
-          placeholder="Insert Geoserver URL"
-          formControlName="url"
-          [ngClass]="{ 'border border-danger': formErrorsFn().url }"
-          (blur)="logValidationErrors()"
-        />
-        <span class="d-block" *ngIf="formErrorsFn().url">
-          <span>
-            {{ formErrorsFn().url }}
-          </span>
-        </span>
-      </div>
-    </div>
-    <div class="d-flex justify-content-around align-items-baseline">
-      <div class="row my-3">
-        <div
-          class="col d-flex justify-content-start flex-column form-group"
-          [ngClass]="{ 'invalid-feedback': formErrorsFn().username }"
-        >
-          <label for="username" class="form-label me-3"
-            >Username<i class="text-danger">*</i></label
-          >
-          <input
-            type="text"
-            class="form-control form-control-sm"
-            id="username"
-            placeholder="Insert Username"
-            formControlName="username"
-            [ngClass]="{ 'border border-danger': formErrorsFn().username }"
-            (blur)="logValidationErrors()"
-          />
-          <span
-            class="d-block"
-            *ngIf="formErrorsFn().username"
-            style="max-width: fit-content"
-          >
-            <span>
-              {{ formErrorsFn().username }}
-            </span>
-          </span>
-        </div>
-      </div>
-      <div class="row my-3">
-        <div
-          class="col d-flex justify-content-start flex-column form-group"
-          [ngClass]="{ 'invalid-feedback': formErrorsFn().password }"
-        >
-          <label for="password" class="form-label me-3"
-            >Password<i class="text-danger">*</i></label
-          >
-          <input
-            type="password"
-            class="form-control form-control-sm"
-            id="password"
-            placeholder="Insert Password"
-            formControlName="password"
-            [ngClass]="{ 'border border-danger': formErrorsFn().password }"
-            (blur)="logValidationErrors()"
-          />
-          <span class="d-block" *ngIf="formErrorsFn().password">
-            <span>
-              {{ formErrorsFn().password }}
-            </span>
-          </span>
-        </div>
-      </div>
-    </div>
-    <div class="col d-flex justify-content-center">
-      <div
-        placement="bottom"
-        ngbTooltip="{{
-          geoserverLogin.invalid ? 'Fill geoserver login form to continue' : ''
-        }}"
-      >
-        <button
-          class="btn btn-m btn-outline-success mt-3 px-5"
-          (click)="addSize()"
-          [disabled]="geoserverLogin.invalid"
-        >
-          Login
-        </button>
-      </div>
-    </div>
-  </div>
-</form>
-<button class="btn btn-m btn-outline-success mt-3 px-5" (click)="getlayers()">
-  Login
-</button>
-<form
-  [formGroup]="imageSizeForm"
-  (ngSubmit)="onSubmitClick()"
-  class="needs-validation"
->
-  <div class="container-fluid w-50 py-3">
-    <div class="row my-3">
-      <!-- <div>
-        <datalist id="suggestions" [(ngModel)]="selectedUser" (input) = "filterUsers()">
-        <option *ngFor = "let option of options">{{option.value}}</option>
-        </datalist>
-        <input  autoComplete="on" list="suggestions"/> 
-        </div> -->
-      <div
-        class="col d-flex justify-content-start flex-wrap form-group"
-        [ngClass]="{
-          'invalid-feedback': formErrorsFn().image}"
-      >
-        <label for="image" class="form-label"
-          >Upload image<i class="text-danger">*</i> (.png)</label
-        >
-        <input
-          #imageInput
-          type="file"
-          accept="image/png"
-          class="form-control form-control-sm"
-          id="image"
-          placeholder="Choose file"
-          formControlName="image"
-          (change)="processFile(imageInput)"
-          [ngClass]="{ 'border border-danger': formErrorsFn().image }"
-          (blur)="logValidationErrors()"
-        />
-        <span class="d-block" *ngIf="formErrorsFn().image">
-          <span>
-            {{ formErrorsFn().image }}
-          </span>
-        </span>
-      </div>
-      <div class="border border-black rounded my-3">
+<mat-accordion>
+  <mat-expansion-panel
+    class="w-50 m-auto my-5"
+    [expanded]="geoserverpanelState"
+  >
+    <mat-expansion-panel-header>
+      <mat-panel-title> Geoserver login </mat-panel-title>
+    </mat-expansion-panel-header>
+    <form
+      [formGroup]="geoserverLogin"
+      class="needs-validation py-2"
+      (ngSubmit)="getlayers()"
+    >
+      <div class="container-fluid py-3 border border-black rounded my-3">
         <div class="row my-3">
           <div
             class="col d-flex justify-content-start flex-wrap form-group"
-            [ngClass]="{ 'invalid-feedback': formErrorsFn().layername }"
+            [ngClass]="{ 'invalid-feedback': formErrorsFn().url }"
           >
-            <label for="layers" class="form-label me-3"
-              >Layer name<i class="text-danger">*</i></label
-            >
-            <datalist id="layername" (input)="filterUsers()">
-              <option *ngFor="let option of layernames">
-                {{ option.name }}
-              </option>
-            </datalist>
-            <input
-              id="layers"
-              autoComplete="on"
-              list="layername"
-              formControlName="layername"
-              class="form-control form-control-sm"
-              [ngClass]="{ 'border border-danger': formErrorsFn().layername }"
-              placeholder="Select layer name"
-              (blur)="logValidationErrors()"
-            />
-            <span class="d-block" *ngIf="formErrorsFn().layername">
-              <span>
-                {{ formErrorsFn().layername }}
-              </span>
-            </span>
-          </div>
-        </div>
-        <div class="row my-3">
-          <div
-            class="col d-flex justify-content-start flex-wrap form-group"
-            [ngClass]="{ 'invalid-feedback': formErrorsFn().category }"
-          >
-            <label for="category" class="form-label me-3"
-              >Category<i class="text-danger">*</i></label
+            <label for="url" class="form-label me-3"
+              >Geoserver URL<i class="text-danger">*</i></label
             >
             <input
               type="text"
               class="form-control form-control-sm"
-              id="category"
-              placeholder="Insert Category"
-              formControlName="category"
-              [ngClass]="{ 'border border-danger': formErrorsFn().category }"
+              id="url"
+              placeholder="Insert Geoserver URL"
+              formControlName="url"
+              [ngClass]="{ 'border border-danger': formErrorsFn().url }"
               (blur)="logValidationErrors()"
             />
-            <span class="d-block" *ngIf="formErrorsFn().category">
+            <span class="d-block" *ngIf="formErrorsFn().url">
               <span>
-                {{ formErrorsFn().category }}
+                {{ formErrorsFn().url }}
               </span>
             </span>
           </div>
         </div>
-        <div class="row my-3">
-          <div
-            class="col d-flex justify-content-start flex-wrap"
-            [ngClass]="{ 'invalid-feedback': formErrorsFn().org }"
-          >
-            <label for="size" class="form-label me-3"
-              >Organization<i class="text-danger">*</i></label
+        <div class="d-flex justify-content-around align-items-baseline">
+          <div class="row my-3">
+            <div
+              class="col d-flex justify-content-start flex-column form-group"
+              [ngClass]="{ 'invalid-feedback': formErrorsFn().username }"
             >
-            <input
-              type="text"
-              class="form-control form-control-sm"
-              id="org"
-              placeholder="Insert Organization Name"
-              formControlName="org"
-              [ngClass]="{ 'border border-danger': formErrorsFn().org }"
-              (blur)="logValidationErrors()"
-            />
-            <span class="d-block" *ngIf="formErrorsFn().org">
-              <span>
-                {{ formErrorsFn().org }}
+              <label for="username" class="form-label me-3"
+                >Username<i class="text-danger">*</i></label
+              >
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                id="username"
+                placeholder="Insert Username"
+                formControlName="username"
+                [ngClass]="{ 'border border-danger': formErrorsFn().username }"
+                (blur)="logValidationErrors()"
+              />
+              <span
+                class="d-block"
+                *ngIf="formErrorsFn().username"
+                style="max-width: fit-content"
+              >
+                <span>
+                  {{ formErrorsFn().username }}
+                </span>
               </span>
-            </span>
+            </div>
           </div>
-        </div>
-        <div class="row my-3">
-          <div
-            class="col d-flex justify-content-start flex-wrap"
-            [ngClass]="{ 'invalid-feedback': formErrorsFn().lang }"
-          >
-            <label for="size" class="form-label me-3"
-              >Language<i class="text-danger">*</i></label
+          <div class="row my-3">
+            <div
+              class="col d-flex justify-content-start flex-column form-group position-relative"
+              [ngClass]="{ 'invalid-feedback': formErrorsFn().password }"
             >
-            <input
-              type="text"
-              class="form-control form-control-sm"
-              id="lang"
-              placeholder="Insert Language"
-              formControlName="lang"
-              [ngClass]="{ 'border border-danger': formErrorsFn().lang }"
-              (blur)="logValidationErrors()"
-            />
-            <span class="d-block" *ngIf="formErrorsFn().lang">
-              <span>
-                {{ formErrorsFn().lang }}
+              <label for="password" class="form-label me-3"
+                >Password<i class="text-danger">*</i></label
+              >
+              <input
+                [type]="password"
+                class="form-control form-control-sm"
+                id="password"
+                placeholder="Insert Password"
+                formControlName="password"
+                [ngClass]="{ 'border border-danger': formErrorsFn().password }"
+                (blur)="logValidationErrors()"
+              />
+              <span (click)="onClick()" class="position-absolute show-password">
+                <i class="bi bi-eye" aria-hidden="true" *ngIf="!show"></i>
+                <i class="bi bi-eye-slash" aria-hidden="true" *ngIf="show"></i>
               </span>
-            </span>
+              <span class="d-block" *ngIf="formErrorsFn().password">
+                <span>
+                  {{ formErrorsFn().password }}
+                </span>
+              </span>
+            </div>
           </div>
         </div>
-        <div class="row my-3">
+        <div class="col d-flex justify-content-center">
           <div
-            class="col d-flex justify-content-start flex-wrap"
-            [ngClass]="{ 'invalid-feedback': formErrorsFn().role }"
-          >
-            <label for="size" class="form-label me-3"
-              >Role<i class="text-danger">*</i></label
-            >
-            <input
-              type="text"
-              class="form-control form-control-sm"
-              id="role"
-              placeholder="Insert Role"
-              formControlName="role"
-              [ngClass]="{ 'border border-danger': formErrorsFn().role }"
-              (blur)="logValidationErrors()"
-            />
-            <span class="d-block" *ngIf="formErrorsFn().role">
-              <span>
-                {{ formErrorsFn().role }}
-              </span>
-            </span>
-          </div>
-        </div>
-        <div class="row my-3">
-          <div
-            class="col d-flex justify-content-start flex-wrap"
-            [ngClass]="{ 'invalid-feedback': formErrorsFn().stylename }"
-          >
-            <label for="stylename" class="form-label me-3"
-              >Style name<i class="text-danger">*</i></label
-            >
-            <input
-              type="text"
-              class="form-control form-control-sm"
-              id="stylename"
-              placeholder="Insert style name"
-              formControlName="stylename"
-              [ngClass]="{ 'border border-danger': formErrorsFn().stylename }"
-              (blur)="logValidationErrors()"
-            />
-            <span class="d-block" *ngIf="formErrorsFn().stylename">
-              <span>
-                {{ formErrorsFn().stylename }}
-              </span>
-            </span>
-          </div>
-        </div>
-        <div class="col d-flex justify-content-end">
-          <div
-            placement="right"
+            placement="bottom"
             ngbTooltip="{{
-              imageSizeForm.get('sizes')?.invalid
-                ? 'Fill existing size group to add a new one'
+              geoserverLogin.invalid
+                ? 'Fill geoserver login form to continue'
                 : ''
             }}"
           >
+            <!--  -->
             <button
-              class="btn btn-sm btn-outline-success mt-3"
-              (click)="addSize()"
-              [disabled]="imageSizeForm.get('sizes')?.invalid"
+              type="submit"
+              class="btn btn-m btn-outline-success mt-3 px-5"
+              [disabled]="geoserverLogin.invalid"
             >
-              Add size
+              Login
             </button>
           </div>
         </div>
-        <div
-          class="border border-black rounded p-3 m-3"
-          formArrayName="sizes"
-          *ngFor="let size of getControls(); let i = index"
-        >
-          <div [formGroupName]="i">
-            <h3 class="d-flex justify-content-between">
-              Size {{ i + 1 }}
-              <div *ngIf="i > 0">
-                <button
-                  class="btn btn-sm btn-outline-danger mt-3 ms-3"
-                  (click)="removeGroup(i)"
+      </div>
+    </form>
+  </mat-expansion-panel>
+</mat-accordion>
+<mat-accordion>
+  <mat-expansion-panel class="w-50 m-auto mt-3" [expanded]="datapanelstate">
+    <mat-expansion-panel-header>
+      <mat-panel-title> Data </mat-panel-title>
+    </mat-expansion-panel-header>
+    <form
+      [formGroup]="imageSizeForm"
+      (ngSubmit)="onSubmitClick()"
+      class="needs-validation"
+    >
+      <div class="container-fluid py-3">
+        <div class="row my-3">
+          <div
+            class="col d-flex justify-content-start flex-wrap form-group"
+            [ngClass]="{
+              'invalid-feedback': formErrorsFn().image
+            }"
+          >
+            <label for="image" class="form-label"
+              >Upload image<i class="text-danger">*</i> (.png)</label
+            >
+            <input
+              #imageInput
+              type="file"
+              accept="image/png"
+              class="form-control form-control-sm"
+              id="image"
+              placeholder="Choose file"
+              formControlName="image"
+              (change)="processFile(imageInput)"
+              [ngClass]="{ 'border border-danger': formErrorsFn().image }"
+              (blur)="logValidationErrors()"
+            />
+            <span class="d-block" *ngIf="formErrorsFn().image">
+              <span>
+                {{ formErrorsFn().image }}
+              </span>
+            </span>
+          </div>
+          <div class="border border-black rounded my-3">
+            <div class="row my-3">
+              <div
+                class="col d-flex justify-content-start flex-wrap form-group"
+                [ngClass]="{ 'invalid-feedback': formErrorsFn().layername }"
+              >
+                <label for="layers" class="form-label me-3"
+                  >Layer name<i class="text-danger">*</i></label
                 >
-                  Remove
-                </button>
+                <datalist id="layername" (input)="filterUsers()">
+                  <option *ngFor="let option of layernames">
+                    {{ option.name }}
+                  </option>
+                </datalist>
+                <input
+                  id="layers"
+                  autoComplete="on"
+                  list="layername"
+                  formControlName="layername"
+                  class="form-control form-control-sm"
+                  [ngClass]="{
+                    'border border-danger': formErrorsFn().layername
+                  }"
+                  placeholder="Select layer name"
+                  (blur)="logValidationErrors()"
+                />
+                <span class="d-block" *ngIf="formErrorsFn().layername">
+                  <span>
+                    {{ formErrorsFn().layername }}
+                  </span>
+                </span>
               </div>
-            </h3>
+            </div>
+            <div class="row my-3">
+              <div
+                class="col d-flex justify-content-start flex-wrap form-group"
+                [ngClass]="{ 'invalid-feedback': formErrorsFn().category }"
+              >
+                <label for="category" class="form-label me-3"
+                  >Category<i class="text-danger">*</i></label
+                >
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  id="category"
+                  placeholder="Insert Category"
+                  formControlName="category"
+                  [ngClass]="{
+                    'border border-danger': formErrorsFn().category
+                  }"
+                  (blur)="logValidationErrors()"
+                />
+                <span class="d-block" *ngIf="formErrorsFn().category">
+                  <span>
+                    {{ formErrorsFn().category }}
+                  </span>
+                </span>
+              </div>
+            </div>
             <div class="row my-3">
               <div
                 class="col d-flex justify-content-start flex-wrap"
-                [ngClass]="{
-                  'invalid-feedback':
-                    size.get('size')?.invalid && size.get('size')?.touched
-                }"
+                [ngClass]="{ 'invalid-feedback': formErrorsFn().org }"
               >
-                <label [attr.for]="'size' + i" class="form-label me-3"
-                  >Size<i class="text-danger">*</i></label
+                <label for="size" class="form-label me-3"
+                  >Organization<i class="text-danger">*</i></label
                 >
                 <input
-                  type="number"
+                  type="text"
                   class="form-control form-control-sm"
-                  [id]="'size' + i"
-                  placeholder="Insert Size"
-                  formControlName="size"
-                  [ngClass]="{
-                    'border border-danger':
-                      size.get('size')?.invalid && size.get('size')?.touched
-                  }"
+                  id="org"
+                  placeholder="Insert Organization Name"
+                  formControlName="org"
+                  [ngClass]="{ 'border border-danger': formErrorsFn().org }"
+                  (blur)="logValidationErrors()"
                 />
-                <span
-                  class="d-block"
-                  *ngIf="size.get('size')?.errors?.['required'] && size.get('size')?.touched"
+                <span class="d-block" *ngIf="formErrorsFn().org">
+                  <span>
+                    {{ formErrorsFn().org }}
+                  </span>
+                </span>
+              </div>
+            </div>
+            <div class="row my-3">
+              <div
+                class="col d-flex justify-content-start flex-wrap"
+                [ngClass]="{ 'invalid-feedback': formErrorsFn().lang }"
+              >
+                <label for="size" class="form-label me-3"
+                  >Language<i class="text-danger">*</i></label
                 >
-                  <span> Insert a valid size </span>
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  id="lang"
+                  placeholder="Insert Language"
+                  formControlName="lang"
+                  [ngClass]="{ 'border border-danger': formErrorsFn().lang }"
+                  (blur)="logValidationErrors()"
+                />
+                <span class="d-block" *ngIf="formErrorsFn().lang">
+                  <span>
+                    {{ formErrorsFn().lang }}
+                  </span>
+                </span>
+              </div>
+            </div>
+            <div class="row my-3">
+              <div
+                class="col d-flex justify-content-start flex-wrap"
+                [ngClass]="{ 'invalid-feedback': formErrorsFn().role }"
+              >
+                <label for="size" class="form-label me-3"
+                  >Role<i class="text-danger">*</i></label
+                >
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  id="role"
+                  placeholder="Insert Role"
+                  formControlName="role"
+                  [ngClass]="{ 'border border-danger': formErrorsFn().role }"
+                  (blur)="logValidationErrors()"
+                />
+                <span class="d-block" *ngIf="formErrorsFn().role">
+                  <span>
+                    {{ formErrorsFn().role }}
+                  </span>
                 </span>
               </div>
             </div>
@@ -381,110 +313,333 @@
                 class="col d-flex justify-content-start flex-wrap"
                 [ngClass]="{
                   'invalid-feedback':
-                    size.get('min')?.invalid && size.get('min')?.touched
+                    formErrorsFn().stylename || stylenamevalidation
                 }"
               >
-                <label [attr.for]="'min' + i" class="form-label me-3"
-                  >Minimum Zoom Level<i class="text-danger">*</i></label
+                <label for="stylename" class="form-label me-3"
+                  >Style name<i class="text-danger">*</i></label
                 >
                 <input
-                  type="number"
+                  type="text"
                   class="form-control form-control-sm"
-                  [id]="'min' + i"
-                  placeholder="Insert Minimum Zoom Level"
-                  formControlName="min"
+                  id="stylename"
+                  placeholder="Insert style name"
+                  formControlName="stylename"
                   [ngClass]="{
                     'border border-danger':
-                      size.get('min')?.invalid && size.get('min')?.touched
+                      formErrorsFn().stylename || stylenamevalidation
                   }"
                   (blur)="logValidationErrors()"
+                  (input)="compareStylename()"
                 />
-                <span
-                  class="d-block"
-                  *ngIf="size.get('min')?.errors?.['required'] && size.get('min')?.touched"
-                >
-                  <span> Insert a valid Minimum zoom level </span>
+                <span class="d-block" *ngIf="formErrorsFn().stylename">
+                  <span>
+                    {{ formErrorsFn().stylename }}
+                  </span>
+                </span>
+                <span class="d-block" *ngIf="stylenamevalidation">
+                  <span> Style name already exists </span>
                 </span>
               </div>
             </div>
             <div class="row my-3">
               <div
                 class="col d-flex justify-content-start flex-wrap"
-                [ngClass]="{
-                  'invalid-feedback':
-                    size.get('max')?.invalid && size.get('max')?.touched
-                }"
+                [ngClass]="{ 'invalid-feedback': formErrorsFn().mapRefrence }"
               >
-                <label [attr.for]="'max' + i" class="form-label me-3"
-                  >Maximum Zoom level<i class="text-danger">*</i></label
+                <label for="mapRefrence" class="form-label me-3"
+                  >Map Refrence<i class="text-danger">*</i></label
                 >
-                <input
-                  type="number"
-                  class="form-control form-control-sm"
-                  [id]="'max' + i"
-                  placeholder="Insert Maximum Zoom Level"
-                  formControlName="max"
+                <select
+                  class="form-select"
+                  id="mapRefrence"
+                  formControlName="mapRefrence"
                   [ngClass]="{
-                    'border border-danger':
-                      size.get('max')?.invalid && size.get('max')?.touched
+                    'border border-danger': formErrorsFn().mapRefrence
                   }"
                   (blur)="logValidationErrors()"
-                />
-                <span
-                  class="d-block"
-                  *ngIf="size.get('max')?.errors?.['required'] && size.get('max')?.touched"
                 >
-                  <span> Insert a valid Maximum zoom level </span>
+                  <option selected disabled>- - Select map refrence - -</option>
+                  <option
+                    *ngFor="let ref of ['OSM', 'Google Maps', 'Customs']"
+                    [value]="ref"
+                  >
+                    {{ ref }}
+                  </option>
+                </select>
+                <span class="d-block" *ngIf="formErrorsFn().mapRefrence">
+                  <span>
+                    {{ formErrorsFn().mapRefrence }}
+                  </span>
                 </span>
               </div>
+            </div>
+
+            <div
+              class="border border-black rounded p-3 m-3"
+              formArrayName="sizes"
+              *ngFor="let size of getControls(); let i = index"
+            >
+              <div [formGroupName]="i">
+                <h3 class="d-flex justify-content-between">
+                  Size {{ i + 1 }}
+                  <div *ngIf="i > 0">
+                    <button
+                      class="btn btn-sm btn-outline-danger mt-3 ms-3"
+                      (click)="removeGroup(i)"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </h3>
+                <div
+                  class="row my-3"
+                  *ngIf="imageSizeForm.get('mapRefrence')?.value == 'OSM'"
+                >
+                  <div
+                    class="col d-flex justify-content-start flex-wrap"
+                    [ngClass]="{
+                      'invalid-feedback':
+                        size.get('leveldropdown')?.invalid &&
+                        size.get('leveldropdown')?.touched
+                    }"
+                  >
+                    <label [attr.for]="'size' + i" class="form-label me-3"
+                      >Select Zoom range<i class="text-danger">*</i></label
+                    >
+                    <select
+                      (click)="
+                        size
+                          .get('min')
+                          ?.setValue(
+                            size.get('leveldropdown')?.value?.level.min
+                          )
+                      "
+                      (click)="
+                        size
+                          .get('max')
+                          ?.setValue(
+                            size.get('leveldropdown')?.value?.level.max
+                          )
+                      "
+                      class="form-select"
+                      [id]="'size' + i"
+                      formControlName="leveldropdown"
+                      [ngClass]="{
+                        'border border-danger':
+                          size.get('leveldropdown')?.invalid &&
+                          size.get('leveldropdown')?.touched
+                      }"
+                    >
+                      <option
+                        *ngFor="let level of osmlevels()"
+                        [ngValue]="{level}"
+                      >
+                        {{ level.name }}
+                      </option>
+                    </select>
+                    <span
+                      class="d-block"
+                      *ngIf="size.get('leveldropdown')?.errors?.['required'] && size.get('leveldropdown')?.touched"
+                    >
+                      <span>Please select a Zoom range </span>
+                    </span>
+                  </div>
+                </div>
+                <div
+                  class="row my-3"
+                  *ngIf="
+                    imageSizeForm.get('mapRefrence')?.value == 'Google Maps'
+                  "
+                >
+                  <div
+                    class="col d-flex justify-content-start flex-wrap"
+                    [ngClass]="{
+                      'invalid-feedback':
+                        size.get('leveldropdown')?.invalid &&
+                        size.get('leveldropdown')?.touched
+                    }"
+                  >
+                    <label [attr.for]="'size' + i" class="form-label me-3"
+                      >Select Zoom range<i class="text-danger">*</i></label
+                    >
+                    <select
+                      (click)="
+                        size
+                          .get('min')
+                          ?.setValue(
+                            size.get('leveldropdown')?.value?.level.min
+                          )
+                      "
+                      (click)="
+                        size
+                          .get('max')
+                          ?.setValue(
+                            size.get('leveldropdown')?.value?.level.max
+                          )
+                      "
+                      class="form-select"
+                      [id]="'size' + i"
+                      formControlName="leveldropdown"
+                      [ngClass]="{
+                        'border border-danger':
+                          size.get('leveldropdown')?.invalid &&
+                          size.get('leveldropdown')?.touched
+                      }"
+                    >
+                      <option
+                        *ngFor="let level of gmapslevels()"
+                        [ngValue]="{level}"
+                      >
+                        {{ level.name }}
+                      </option>
+                    </select>
+                    <span
+                      class="d-block"
+                      *ngIf="size.get('leveldropdown')?.errors?.['required'] && size.get('leveldropdown')?.touched"
+                    >
+                      <span>Please select a Zoom range </span>
+                    </span>
+                  </div>
+                </div>
+                <div class="row my-3">
+                  <div
+                    class="col d-flex justify-content-start flex-wrap"
+                    [ngClass]="{
+                      'invalid-feedback':
+                        size.get('size')?.invalid && size.get('size')?.touched
+                    }"
+                  >
+                    <label [attr.for]="'size' + i" class="form-label me-3"
+                      >Size<i class="text-danger">*</i></label
+                    >
+                    <input
+                      type="number"
+                      class="form-control form-control-sm"
+                      [id]="'size' + i"
+                      placeholder="Insert Size"
+                      formControlName="size"
+                      [ngClass]="{
+                        'border border-danger':
+                          size.get('size')?.invalid && size.get('size')?.touched
+                      }"
+                    />
+                    <span
+                      class="d-block"
+                      *ngIf="size.get('size')?.errors?.['required'] && size.get('size')?.touched"
+                    >
+                      <span> Insert a valid size </span>
+                    </span>
+                  </div>
+                </div>
+                <div class="row my-3">
+                  <div
+                    class="col d-flex justify-content-start flex-wrap"
+                    [ngClass]="{
+                      'invalid-feedback':
+                        size.get('min')?.invalid && size.get('min')?.touched
+                    }"
+                  >
+                    <label [attr.for]="'min' + i" class="form-label me-3"
+                      >Minimum Zoom Level<i class="text-danger">*</i></label
+                    >
+                    <input
+                      type="number"
+                      class="form-control form-control-sm"
+                      [id]="'min' + i"
+                      placeholder="Insert Minimum Zoom Level"
+                      formControlName="min"
+                      [value]="size.get('leveldropdown')?.value?.level.min"
+                      [ngClass]="{
+                        'border border-danger':
+                          size.get('min')?.invalid && size.get('min')?.touched
+                      }"
+                      (blur)="logValidationErrors()"
+                    />
+                    <span
+                      class="d-block"
+                      *ngIf="size.get('min')?.errors?.['required'] && size.get('min')?.touched"
+                    >
+                      <span> Insert a valid Minimum zoom level </span>
+                    </span>
+                  </div>
+                </div>
+                <div class="row my-3">
+                  <div
+                    class="col d-flex justify-content-start flex-wrap"
+                    [ngClass]="{
+                      'invalid-feedback':
+                        size.get('max')?.invalid && size.get('max')?.touched
+                    }"
+                  >
+                    <label [attr.for]="'max' + i" class="form-label me-3"
+                      >Maximum Zoom level<i class="text-danger">*</i></label
+                    >
+                    <input
+                      type="number"
+                      class="form-control form-control-sm"
+                      [id]="'max' + i"
+                      placeholder="Insert Maximum Zoom Level"
+                      formControlName="max"
+                      [value]="size.get('leveldropdown')?.value?.level.max"
+                      [ngClass]="{
+                        'border border-danger':
+                          size.get('max')?.invalid && size.get('max')?.touched
+                      }"
+                      (input)="logValidationErrors()"
+                    />
+                    <span
+                      class="d-block"
+                      *ngIf="size.get('max')?.errors?.['required'] && size.get('max')?.touched"
+                    >
+                      <span> Insert a valid Maximum zoom level </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col d-flex justify-content-end">
+            <div
+              placement="left"
+              ngbTooltip="{{
+                imageSizeForm.get('sizes')?.invalid
+                  ? 'Fill existing size group to add a new one'
+                  : ''
+              }}"
+            >
+              <button
+                class="btn btn-sm btn-outline-success mt-3"
+                (click)="addSize()"
+                [disabled]="imageSizeForm.get('sizes')?.invalid"
+              >
+                Add size
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="col d-flex justify-content-end w-75">
-    <div
-      placement="bottom"
-      ngbTooltip="{{
-        !imageSizeForm.valid
-          ? 'Fill all required fields to generate a style'
-          : ''
-      }}"
-    >
-      <button
-        class="btn btn-sm btn-outline-primary mt-3"
-        [disabled]="!imageSizeForm.valid"
-      >
-        Generate Style
-      </button>
-    </div>
-  </div>
-</form>
-<form [formGroup]="resForm">
-  <div class="row my-3 w-75 m-auto">
-    <div class="col textarea-container mb-5 pb-5">
-      <label
-        for="style"
-        class="form-label font-weight-bold"
-        style="font-size: 25px"
-        >Style</label
-      >
-      <textarea
-        #inputTarget
-        class="form-control form-control-sm border rounded"
-        id="style"
-        rows="15"
-        formControlName="resbody"
-      ></textarea>
-      <button
-        class="btn btn-outline-secondary"
-        placement="right"
-        ngbTooltip="Click to Copy"
-        [ngxClipboard]="inputTarget"
-      >
-        <i class="bi bi-clipboard"></i>
-      </button>
-    </div>
-  </div>
-</form>
+      <div class="col d-flex justify-content-end">
+        <div
+          placement="left"
+          ngbTooltip="{{
+            !imageSizeForm.valid || stylenamevalidation || !geoserverLogin.valid
+              ? 'Fill all required fields to generate a style'
+              : ''
+          }}"
+        >
+          <button
+            class="btn btn-sm btn-outline-primary mt-3"
+            [disabled]="
+              !imageSizeForm.valid ||
+              stylenamevalidation ||
+              !geoserverLogin.valid
+            "
+          >
+            Generate Style
+          </button>
+        </div>
+      </div>
+    </form>
+  </mat-expansion-panel>
+</mat-accordion>
