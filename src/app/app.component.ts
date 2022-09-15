@@ -30,9 +30,9 @@ export class AppComponent {
     public connectionService: ConnectionService,
     private fb: FormBuilder
   ) {}
-  password:string = 'password';
+  password: string = 'password';
 
-  show : boolean = false;
+  show: boolean = false;
   stylenamevalidation: boolean;
   geoserverpanelState = true;
   datapanelstate = false;
@@ -41,6 +41,9 @@ export class AppComponent {
   filterdOptions = [];
   loading: boolean;
   errormsg: boolean;
+  nmessage: string;
+  ymessage: string;
+  loggedIn: boolean;
   imageSizeForm: FormGroup;
   geoserverLogin: FormGroup;
 
@@ -171,6 +174,7 @@ export class AppComponent {
     this.connectionService.uploadImage(formData, headers).subscribe(
       (data) => {
         if (data) {
+          this.ymessage = 'Style added'
           this.loading = false;
           this.onSuccess(data);
         } else {
@@ -178,6 +182,7 @@ export class AppComponent {
         }
       },
       (err) => {
+        this.nmessage = 'Failed to connect to server and add style'
         this.errormsg = true;
         setTimeout(() => {
           this.errormsg = false;
@@ -199,20 +204,31 @@ export class AppComponent {
     // loginformData.append('url', this.geoserverLogin?.get('url')?.value);
     // loginformData.append('user', this.geoserverLogin?.get('username')?.value);
     // loginformData.append('pw', this.geoserverLogin?.get('password')?.value);
-    this.connectionService.getlayers(loginBody).subscribe(
-      (data) => {
+    this.connectionService.getlayers(loginBody).subscribe({
+      next: (data) => {
+        this.ymessage = 'Logged in successfully'
+        this.loggedIn = true;
+        setTimeout(() => {
+          this.loggedIn = false;
+        }, 5000);
         this.loading = false;
         this.geoserverpanelState = false;
         this.datapanelstate = true;
         this.layernames = data.Layers;
         this.stylenames = data.Styles;
       },
-      (err) => {
+      error: (err) => {
+        console.log(err);
+        this.nmessage ='Faild to login please check username or password'
+        this.errormsg = true;
+        setTimeout(() => {
+          this.errormsg = false;
+        }, 5000);
         this.loading = false;
         this.geoserverpanelState = true;
         this.datapanelstate = false;
-      }
-    );
+      },
+    });
   }
   compareStylename() {
     let styles = this.stylenames;

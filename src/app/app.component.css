@@ -30,7 +30,8 @@
   height: 200px;
 
 }
-.errormsg{
+.msg{
+  z-index: 1000000;
   left: 50%;
   transform: translateX(-50%);
   top: 10px;

@@ -7,11 +7,18 @@
   </div>
 </nav>
 <div
-  class="position-fixed alert alert-danger w-75 text-center errormsg"
+  class="position-fixed alert alert-success w-75 text-center msg"
+  role="alert"
+  *ngIf="loggedIn"
+>
+  {{ymessage}}
+</div>
+<div
+  class="position-fixed alert alert-danger w-75 text-center msg"
   role="alert"
   *ngIf="errormsg"
 >
-  Faild to connect to server
+  {{nmessage}}
 </div>
 <div
   class="d-flex row justify-content-center position-fixed align-content-center showloadingcontainer"
