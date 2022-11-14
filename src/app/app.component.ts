@@ -175,6 +175,10 @@ export class AppComponent {
       (data) => {
         if (data) {
           this.ymessage = 'Style added'
+          this.loggedIn = true;
+        setTimeout(() => {
+          this.loggedIn = false;
+        }, 5000);
           this.loading = false;
           this.onSuccess(data);
         } else {
